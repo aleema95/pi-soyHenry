@@ -1,0 +1,46 @@
+.apiMainContainer {
+  position: relative;
+  text-align: center;
+  display: flex;
+  color: var(--color-bright);
+}
+
+p {
+  width: 80%;
+}
+
+.gameDesc {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: rgba(28, 27, 27, 0.6);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(3.2px);
+  -webkit-backdrop-filter: blur(3.2px);
+}
+
+.genresAndPlatformContainer {
+  display: flex;
+  justify-content: space-evenly;
+  width: 80%;
+}
+
+.divisoryLine {
+  background-color: var(--color-bright);
+  height: 1px;
+  width: 100%;
+}
+
+.divisoryLineBigger {
+  background-color: var(--color-bright);
+  height: 1px;
+  width: 60%;
+}

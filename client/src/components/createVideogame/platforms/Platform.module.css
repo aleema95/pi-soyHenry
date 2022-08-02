@@ -1,0 +1,30 @@
+.platformContainer {
+  display: flex;
+  border: black solid 1px;
+  width: 75px;
+  height: 50px;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  border-radius: 5px;  
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.platformContainer input {
+  display: none;
+}
+
+.selected {
+  background-color: var(--color-bright);
+  color: var(--color-1);
+}
+
+.platformContainer:hover {
+  background-color: var(--color-bright);
+  color: var(--color-1);
+}
+
+.platformContainer label {
+  padding: 14% 21%;
+}
