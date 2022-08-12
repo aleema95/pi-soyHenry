@@ -93,7 +93,7 @@ router.get('/', async (req, res) => {
   }       
 });
 
-router.get('/saraza', async (req, res) => {
+router.get('/rating', async (req, res) => {
   let gamesRated = allGamesArr.filter(game  => game.rating >= 4.5)
 
   let gamesRatedDb = await Videogame.findAll({
