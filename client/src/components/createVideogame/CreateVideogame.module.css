@@ -22,7 +22,7 @@
   background-image: ur;
 }
 
-p {
+.inputsContainer p, .mainGenresPlatformContainer p {
   color: var(--color-warning);
   align-self: center;
 }

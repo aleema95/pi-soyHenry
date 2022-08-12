@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createVideogame, getAllGenres } from "../../redux/actions/actions";
+import { createVideogame, getAllGenres, RESET_CREATE_VIDEOGAME_STATUS } from "../../redux/actions/actions";
 import { useNavigate } from 'react-router-dom'
 import Style from './CreateVideogame.module.css'
 import Genre from "./genre/Genre";
@@ -68,27 +68,38 @@ function CreateVideogame(props) {
   const [selectedPlatform, setSelectedPlatform] = useState([]);
   const [newGame, setNewGame] = useState({name: '', description: '', rating: "", release_date:"" , genres: [], platforms: []})
   const [error, setError] = useState({})
-
+  
   const dispatch = useDispatch(); 
+  
+  const createVideogameStatus = useSelector(state => state.mainReducer.createVideogameStatus)
+  const genresFromState = useSelector(state => state.mainReducer.allGenres);
 
-  const genres = useSelector(state => state.mainReducer.allGenres);
-
+  //aca se hace la validacion
   function formValidation(obj){
 
     let error = {};
 
     const { name, description, rating, genres, platforms, release_date } = obj;
-    if(!name) error.name = 'Name is required.'; 
+    if(!name) error.name = 'Name is required.'; //check nombre vacio
     if(!description) error.description = 'Description is required.';
-    if(!release_date) error.release_date = 'Release date is required.';
+    if(!release_date) {
+      error.release_date = 'Release date is required.';
+    } else if (!/^\d\d\d\d-\d\d-\d\d$/g.test(release_date)) {
+      error.release_date = 'Invalid release date.';
+    }
+    //^[0-5]([.]\d\d)?$
     if(!rating) {
       error.rating = 'Rating is required.';
-    } else if (/[^1234567890]/g.test(parseInt(rating))) {
-      error.rating = 'Should be only numbers.';
+     
+    } else if (!/^[0-9]$/g.test(rating)) {
+        error.rating = 'Should be only numbers.';
     } else if (parseInt(rating) < 1 || parseInt(rating) > 5) {
+
       error.rating = 'Should be between 1 and 5.';
     }
-    if (!genres.length) error.genres = 'You must chose at least 1 genre.';
+    if (!genres.length) {
+      error.genres = 'You must chose at least 1 genre.';
+    }
     if (!platforms.length) error.platform = 'You must chose at least 1 platform.';
 
     return error;
@@ -103,18 +114,16 @@ function CreateVideogame(props) {
     let objError = formValidation({...newGame});
     setError(objError)
   }
-  //checkear si el navigate no funcionaba por el dispatch
+
   function handleSubmit(e){
     if(Object.keys(error).length === 0) {
         e.preventDefault();
         dispatch(createVideogame(newGame));
         setNewGame({name: '', description: '', rating: "", release_date: "" ,genres: [], platforms: []})
-        return setTimeout(() => {
-           navigate('/home') 
-        }, 100)       
+        return
       } 
       e.preventDefault();
-      alert('Check field information')
+      alert(error[Object.keys(error)[0]]);
   }
   
   function addGenreAndPlatform(inputName, value){
@@ -143,6 +152,17 @@ function CreateVideogame(props) {
   },[newGame])
 
   useEffect(() => {
+    if(createVideogameStatus === 'success') {
+      alert('creado correctamente');
+      dispatch({type: RESET_CREATE_VIDEOGAME_STATUS})
+      navigate('/home') 
+    } else if (createVideogameStatus === "error") {
+      alert('Ha ocurrido un error.');
+      dispatch({type: RESET_CREATE_VIDEOGAME_STATUS})
+    }
+  }, [createVideogameStatus, navigate, dispatch])
+
+  useEffect(() => {
     setNewGame( (prev) => ({
       ...prev,
       genres: selectedGenre,
@@ -158,7 +178,7 @@ function CreateVideogame(props) {
     <div className={Style.mainContainer}>
       <form id='myForm' className={Style.formContainer} onSubmit={handleSubmit}>
         <div className={Style.inputsContainer}>
-          <input className={Style.writingInput} onChange={handleChange} type="text" name='name' id='name' placeholder="Name..." value={newGame.name}/>
+          <input className={Style.writingInput} onChange={handleChange} type="text" name='name' id='name' placeholder={error.name? error.name : "Name..."} value={newGame.name}/>
           {error.name ? <p>{error.name}</p> : <p></p>}
 
           <input className={Style.writingInput} onChange={handleChange} type="textarea" name='description' id='description' placeholder="Description..." value={newGame.description}/>
@@ -185,7 +205,7 @@ function CreateVideogame(props) {
           <h3>Genres</h3>
           <div className={Style.divisoryLine}></div>
           <div className={Style.genresContainer}>
-            {genres?.map((genre) => <Genre 
+            {genresFromState?.map((genre) => <Genre 
                                     key={genre.id} 
                                     {...genre} 
                                     addGenreAndPlatform={addGenreAndPlatform}

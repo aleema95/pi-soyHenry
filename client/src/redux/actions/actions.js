@@ -10,6 +10,13 @@ export const SET_FILTER = "SET_FILTER";
 export const GET_FILTERED_VIDEOGAME = "GET_FILTERED_VIDEOGAME";
 export const GET_POKEMON_BY_ID = "GET_POKEMON_BY_ID";
 export const DESTROY_DETAILS = "DESTROY_DETAILS";
+export const VIDEOGAME_CREATE_SUCCESS = "VIDEOGAME_CREATE_SUCCESS";
+export const VIDEOGAME_CREATE_FAILED = "VIDEOGAME_CREATE_FAILED";
+export const RESET_CREATE_VIDEOGAME_STATUS = "RESET_CREATE_VIDEOGAME_STATUS";
+export const VIDEOGAME_DELETE_SUCCESS = "VIDEOGAME_DELETE_SUCCESS";
+export const VIDEOGAME_DELETE_FAILED = "VIDEOGAME_DELETE_FAILED";
+export const RESET_DELETE_VIDEOGAME_STATUS = "RESET_DELETE_VIDEOGAME_STATUS";
+
 
 
 
@@ -53,15 +60,15 @@ export function getAllGenres(){
 export function createVideogame(payload){
   return dispatch => {
     return axios.post('http://localhost:3001/videogames', payload)
-              .then( r => console.log(r.data))
-              .catch(err => console.error(err))
+              .then( r => dispatch({type: VIDEOGAME_CREATE_SUCCESS, payload: 'success'}))
+              .catch(err => dispatch({type: VIDEOGAME_CREATE_FAILED, payload: 'error'}))
   }
 }
 
 export function deleteVideogame(id) {
   return dispatch => {
     return axios.delete(`http://localhost:3001/videogames/${id}`)
-              .then( r => console.log(r.data))
-              .catch( err => console.log(err))
+              .then( r => dispatch({type: VIDEOGAME_DELETE_SUCCESS, payload: 'success'}))
+              .catch( err =>dispatch({type: VIDEOGAME_DELETE_FAILED, payload: 'error'}))
   }
 }

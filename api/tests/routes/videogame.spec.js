@@ -20,5 +20,11 @@ describe('Videogame routes', () => {
     it('should get 200', () =>
       agent.get('/videogames').expect(200)
     );
+
+    it('should get all videogames.', () => {
+      agent.get('/videogames')
+      .then( games => expect(games).to.have.length(1))
+    });
+
   });
 });

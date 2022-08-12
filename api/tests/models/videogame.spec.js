@@ -9,14 +9,21 @@ describe('Videogame model', () => {
   describe('Validators', () => {
     beforeEach(() => Videogame.sync({ force: true }));
     describe('name', () => {
+
       it('should throw an error if name is null', (done) => {
         Videogame.create({})
           .then(() => done(new Error('It requires a valid name')))
           .catch(() => done());
       });
+
       it('should work when its a valid name', () => {
-        Recipe.create({ name: 'Super Mario Bros' });
+        Videogame.create({ name: 'The galactic galaxy' });
       });
+
+      // it('should work when its a valid name', () => {
+      //   Videogame.create({ name: 'The galactic galaxy' });
+      // });
+
     });
   });
 });

@@ -8,7 +8,13 @@ import {
   FILTER,
   SET_FILTER,
   GET_POKEMON_BY_ID,
-  DESTROY_DETAILS
+  DESTROY_DETAILS,
+  VIDEOGAME_CREATE_SUCCESS,
+  VIDEOGAME_CREATE_FAILED,
+  RESET_CREATE_VIDEOGAME_STATUS,
+  VIDEOGAME_DELETE_SUCCESS,
+  VIDEOGAME_DELETE_FAILED,
+  RESET_DELETE_VIDEOGAME_STATUS
 } from "../actions/actions";
 
 
@@ -21,6 +27,8 @@ const initialState = {
   objectPagination: { currentPage: 1, pages: 0, from:0, to: 15, name:"", genre:"", createdByUser: false, sort: ""},
   fetching: false,
   errorHandler: false,
+  createVideogameStatus: "",
+  deleteVideogameStatus: ""
 }
 
 
@@ -40,6 +48,42 @@ const mainReducer = (state = initialState, action)=> {
       return{
         ...state,
         allGenres: action.payload,
+      };
+
+    case VIDEOGAME_CREATE_SUCCESS:
+      return{
+        ...state,
+        createVideogameStatus: action.payload,
+      };
+    
+    case VIDEOGAME_CREATE_FAILED:
+      return{
+        ...state,
+        createVideogameStatus: action.payload,
+      };
+    
+    case RESET_CREATE_VIDEOGAME_STATUS:
+      return{
+        ...state,
+        createVideogameStatus: initialState.createVideogameStatus,
+      };
+
+    case VIDEOGAME_DELETE_SUCCESS:
+      return{
+        ...state,
+        deleteVideogameStatus: action.payload,
+      };
+  
+    case VIDEOGAME_DELETE_FAILED:
+      return{
+        ...state,
+        deleteVideogameStatus: action.payload,
+      };
+  
+    case RESET_DELETE_VIDEOGAME_STATUS:
+      return{
+        ...state,
+        deleteVideogameStatus: initialState.deleteVideogameStatus,
       };
 
     case FETCHING:
