@@ -14,19 +14,23 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
+    description_raw: {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    release_date: {
+    released: {
       type: DataTypes.DATEONLY,
       defaultValue: DataTypes.NOW
     },
     rating: {
       type: DataTypes.FLOAT,
     },
+    background_image: {
+      type: DataTypes.STRING,
+      defaultValue: "../../img/videogame.png"
+    },
     platforms: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.ARRAY(DataTypes.STRING), 
       allowNull: false,
     }
   },{
