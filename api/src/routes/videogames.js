@@ -6,7 +6,7 @@ const { API_KEY } = process.env;
 // Middleware para hacer request a la API.
 const apiReq = async (req, res, next) => {
   // Pregunto si ya esta almacenada.
-  const gamesInDb = Videogame.findAll()
+  const gamesInDb = await Videogame.findAll()
   if(gamesInDb.length) return next(); 
   allGamesArr = [];
 
