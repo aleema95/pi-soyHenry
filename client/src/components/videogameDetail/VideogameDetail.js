@@ -49,7 +49,7 @@ function VideogameDetail(props){
             <div className={Style.gameDesc}>
               <button onClick={handleClick}>Delete</button>
               <h1>{name}</h1>
-              <p>{description}</p>
+              {/* <p>{description}</p> */}
               <div className={Style.divisoryLineBigger}></div>
               <h2>Rating:  {rating}</h2>
               <div className={Style.genresAndPlatformContainer}></div>
@@ -69,7 +69,7 @@ function VideogameDetail(props){
                     <h3 key={platform.id}>{platform}</h3>
                   )})}
               </div>
-              <h3>{release_date}</h3>
+              {/* <h3>{release_date}</h3> */}
             </div>
           </div> :
           //Por Api

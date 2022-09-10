@@ -103,8 +103,7 @@ router.get('/rating', async (req, res) => {
   let allGames = [...gamesRated, ...gamesRatedDb]
 
   res.send(allGames)
-}) 
-
+});
 
 router.post('/', async (req, res) => {
   let { name, description, release_date, rating, genres, platforms } = req.body;
