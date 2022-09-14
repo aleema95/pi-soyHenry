@@ -150,7 +150,7 @@ const mainReducer = (state = initialState, action)=> {
        const aux = state.allVideogames.filter(function(game){
 
           if (!game.name.toLowerCase().startsWith(state.objectPagination.name.toLowerCase())) return false; 
-          let genreFalse = game.Generos.some(function(genre) {
+          let genreFalse = game.Genres.some(function(genre) {
           if(state.objectPagination.genre === "") return true;
           return genre.name === state.objectPagination.genre; 
           });

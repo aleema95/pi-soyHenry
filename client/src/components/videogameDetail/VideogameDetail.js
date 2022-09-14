@@ -13,7 +13,7 @@ function VideogameDetail(props){
   const dispatch = useDispatch();
   const details = useSelector(state => state.mainReducer.videogameDetails);
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
-  const { name, background_image, Generos, genres,  platforms, rating,description_raw, released } = details;
+  const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
 
   function handleClick(e){
     dispatch(deleteVideogame(id)); 
@@ -40,7 +40,7 @@ function VideogameDetail(props){
   return(
 
       <div className={Style.mainContainer}>
-          {Generos?
+          {Genres?
           //Por DB
           <div className={Style.apiMainContainer}>
             <div>
@@ -56,7 +56,7 @@ function VideogameDetail(props){
               <div className={Style.genresContainer}>
                 <h2>Genres </h2>
                 <div className={Style.divisoryLine}></div>
-                  {Generos?.map( genre => {
+                  {Genres?.map( genre => {
                     return (
                       <h3 key={genre.id}>{genre.name}</h3>
                     )})}
