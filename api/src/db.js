@@ -3,7 +3,7 @@ const { Sequelize, Op } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const {
-  DB_USER, DB_PASSWORD, DB_HOST,
+  DB_USER, DB_PASSWORD, DB_HOST, DB_NAME
 } = process.env;
 
 //API URLkey = https://api.rawg.io/api/games?key=ad24d83c81c34279bcee55590c7f7124
