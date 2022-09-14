@@ -4,26 +4,30 @@ const { Genre } = require('../db.js');
 const { API_KEY } = process.env;
 
 const genresReq = async (req, res, next) => {
-  let find = await Genre.findAll();
+  try {
+    let find = await Genre.findAll();
 
-  if(find.length) return next();
+    if(find.length) return next();
+    
+    let apiRequest = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`);
+    
+    allGenresArr = apiRequest.data.results.map( genre => {
+      return {
+        name: genre.name,
+        bg_img: genre.image_background,
+      }
+    });
   
-  let apiRequest = await axios.get(`https://api.rawg.io/api/genres?key=${API_KEY}`);
-  
-  allGenresArr = apiRequest.data.results.map( genre => {
-    return {
-      name: genre.name,
-      bg_img: genre.image_background,
-    }
-  });
+    allGenresArr.forEach( async (genre) => {
+      await Genre.create({
+        name: genre.name,
+      })
+    });
 
-  allGenresArr.forEach( async (genre) => {
-    await Genre.create({
-      name: genre.name,
-    })
-  });
-  
-  next();
+    next();
+  } catch (error) {
+    next(error);
+  }
 } 
 
 const router = Router();

@@ -6,66 +6,69 @@ const { API_KEY } = process.env;
 // Middleware para hacer request a la API.
 const apiReq = async (req, res, next) => {
   // Pregunto si ya esta almacenada.
-  const gamesInDb = await Videogame.findAll()
-  if(gamesInDb.length) return next(); 
-  allGamesArr = [];
-
-  // Si no lo esta hago la primera request.
-      let nextReq = `https://api.rawg.io/api/games?key=${API_KEY}`;
-
-      //Luego hago un loop hasta que llegue a 100 resultados.
-      for (let i = 0; i < 100; i = i + 20) {
-      //Pido .next del resultado de la API.
-        let games = await axios.get(nextReq);
-
-        // Pusheo todo a "allGamesArr".
+  try {
+    const gamesInDb = await Videogame.findAll()
+    if(gamesInDb.length) return next(); 
+    allGamesArr = [];
+  
+    // Si no lo esta hago la primera request.
+        let nextReq = `https://api.rawg.io/api/games?key=${API_KEY}`;
+  
+        //Luego hago un loop hasta que llegue a 100 resultados.
+        for (let i = 0; i < 100; i = i + 20) {
+        //Pido .next del resultado de la API.
+          let games = await axios.get(nextReq);
+  
+          // Pusheo todo a "allGamesArr".
+          
+          allGamesArr = [...allGamesArr, ...games?.data?.results?.map(game => {
+            let plataformas = game.platforms.map(p => p.platform.name)
+            return {
+              id: game.id,
+              name: game.name,
+              bg_img: game.background_image,
+              genres: game.genres,
+              //description: game.name,
+              release_date: game.released,
+              rating: game.rating,
+              platforms: plataformas,
+            }
+          })];
+          // Cambiamos la URL a la siguiente.
+          nextReq = games.data.next;
         
-        allGamesArr = [...allGamesArr, ...games?.data?.results?.map(game => {
-          let plataformas = game.platforms.map(p => p.platform.name)
-          return {
-            id: game.id,
-            name: game.name,
-            bg_img: game.background_image,
-            genres: game.genres,
-            //description: game.name,
-            release_date: game.released,
-            rating: game.rating,
-            platforms: plataformas,
-          }
-        })];
-        // Cambiamos la URL a la siguiente.
-        nextReq = games.data.next;
-      
-    }
-      // Creo un videojuego con los datos que envia el usuario.
-      allGamesArr.forEach( async g => {
-        const vidG = await Videogame.create({
-          name: g.name,
-          released: g.release_date,
-          rating: g.rating,
-          background_image: g.bg_img,
-          platforms: g.platforms
-        });
-        
-        const gensFound = g.genres.map( async g => {
-          return await Genre.findOne({
-            where: {
-              name: g.name
-            },
-            attributes: ['id']
+      }
+        // Creo un videojuego con los datos que envia el usuario.
+        allGamesArr.forEach( async g => {
+          const vidG = await Videogame.create({
+            name: g.name,
+            released: g.release_date,
+            rating: g.rating,
+            background_image: g.bg_img,
+            platforms: g.platforms
+          });
+          
+          const gensFound = g.genres.map( async g => {
+            return await Genre.findOne({
+              where: {
+                name: g.name
+              },
+              attributes: ['id']
+            })
           })
-        })
-  
-        const gensFoundId = await Promise.all(gensFound)
-  
-        const gensId = gensFoundId.map( g => {
-          return g.id
-        }) 
-        
-        await vidG.addGenres(gensId);
-      });
-     
-    next();
+    
+          const gensFoundId = await Promise.all(gensFound)
+    
+          const gensId = gensFoundId.map( g => {
+            return g.id
+          }) 
+          
+          await vidG.addGenres(gensId);
+        });
+        next()
+  } catch (error) {
+    next(error)
+  }
 }
 
 const router = Router();
