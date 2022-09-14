@@ -105,6 +105,7 @@ router.get('/rating', async (req, res) => {
 router.post('/', async (req, res) => {
   const { name, description, release_date, rating, genres, platforms } = req.body;
 
+  
   try {
     // Creo un videojuego con los datos que envia el usuario.
     const vidG = await Videogame.create({
@@ -112,16 +113,19 @@ router.post('/', async (req, res) => {
       description,
       release_date,
       rating,
-      platforms
+      platforms,
+      created_by_user: true
     });
-
+    
     // Le agrego los generos que envio el usuario.
     await vidG.addGenres(genres);
     // Respondo con el Videojuego creado.
-
+    console.log(genres);
+    console.log(vidG);
     res.send(vidG);
   } catch (error) {
-    res.status(200).send(error);
+    console.log(error);
+    res.status(400).send(error);
   }
 });
 
