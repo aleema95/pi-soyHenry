@@ -44,7 +44,8 @@ const apiReq = async (req, res, next) => {
           released: g.release_date,
           rating: g.rating,
           background_image: g.bg_img,
-          platforms: g.platforms
+          platforms: g.platforms,
+          created_by_user: false
         });
         
         const gensFound = g.genres.map( async g => {
