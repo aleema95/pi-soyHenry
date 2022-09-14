@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { DESTROY_DETAILS } from "../../redux/actions/actions";
 import { useDispatch, useSelector } from 'react-redux';
-import { getVideogameById, deleteVideogame } from "../../redux/actions/actions";
+import { getVideogameById, deleteVideogame, RESET_DELETE_VIDEOGAME_STATUS } from "../../redux/actions/actions";
 import  background_img from '../../img/videogame.png';
 import Style from './VideogameDetail.module.css';
 
@@ -11,13 +11,24 @@ function VideogameDetail(props){
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const details = useSelector(state => state.mainReducer.videogameDetails)
-  const { name, background_image, Generos, genres,  platforms, rating, description,description_raw, release_date, released } = details;
+  const details = useSelector(state => state.mainReducer.videogameDetails);
+  const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
+  const { name, background_image, Generos, genres,  platforms, rating,description_raw, released } = details;
 
   function handleClick(e){
     dispatch(deleteVideogame(id)); 
-    navigate('/home')
   }
+
+  useEffect(() => {
+    if (deleteVideogameStatus === 'success') {
+      alert('Videojuego eliminado correctamente')
+      dispatch({type: RESET_DELETE_VIDEOGAME_STATUS})
+      navigate('/home');
+    } else if (deleteVideogameStatus === 'error') {
+      alert('Error al eliminar el videojuegos')
+      dispatch({type: RESET_DELETE_VIDEOGAME_STATUS})
+    }
+  }, [deleteVideogameStatus, navigate, dispatch])
 
   useEffect(() => {
     dispatch(getVideogameById(id))
@@ -38,7 +49,7 @@ function VideogameDetail(props){
             <div className={Style.gameDesc}>
               <button onClick={handleClick}>Delete</button>
               <h1>{name}</h1>
-              <p>{description}</p>
+              {/* <p>{description}</p> */}
               <div className={Style.divisoryLineBigger}></div>
               <h2>Rating:  {rating}</h2>
               <div className={Style.genresAndPlatformContainer}></div>
@@ -58,7 +69,7 @@ function VideogameDetail(props){
                     <h3 key={platform.id}>{platform}</h3>
                   )})}
               </div>
-              <h3>{release_date}</h3>
+              {/* <h3>{release_date}</h3> */}
             </div>
           </div> :
           //Por Api

@@ -32,7 +32,6 @@ router.use(genresReq);
 let allGenresArr = [];
 
 router.get('/', async (req, res) => {
-  console.log(allGenresArr.length);
 
   try {
     let genres = await Genero.findAll();
