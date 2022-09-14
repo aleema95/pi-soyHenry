@@ -1,10 +1,10 @@
 const { Router } = require('express');
 const { default: axios } = require('axios')
-const { Genero } = require('../db.js');
+const { Genre } = require('../db.js');
 const { API_KEY } = process.env;
 
 const genresReq = async (req, res, next) => {
-  let find = await Genero.findAll();
+  let find = await Genre.findAll();
 
   if(find.length) return next();
   
@@ -18,7 +18,7 @@ const genresReq = async (req, res, next) => {
   });
 
   allGenresArr.forEach( async (genre) => {
-    await Genero.create({
+    await Genre.create({
       name: genre.name,
     })
   });
@@ -34,7 +34,7 @@ let allGenresArr = [];
 router.get('/', async (req, res) => {
 
   try {
-    let genres = await Genero.findAll();
+    let genres = await Genre.findAll();
     res.status(200).json(genres);
   } catch (error) {
     res.send(404).json(error.message)

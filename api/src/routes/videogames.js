@@ -1,6 +1,6 @@
 const { default: axios } = require('axios')
 const { Router } = require('express');
-const { Videogame, Genero, Op } = require('../db.js');
+const { Videogame, Genre, Op } = require('../db.js');
 const { API_KEY } = process.env;
 
 // Middleware para hacer request a la API.
@@ -49,7 +49,7 @@ const apiReq = async (req, res, next) => {
         });
         
         const gensFound = g.genres.map( async g => {
-          return await Genero.findOne({
+          return await Genre.findOne({
             where: {
               name: g.name
             },
@@ -63,7 +63,7 @@ const apiReq = async (req, res, next) => {
           return g.id
         }) 
         
-        await vidG.addGeneros(gensId);
+        await vidG.addGenres(gensId);
       });
      
     next();
@@ -80,7 +80,7 @@ router.get('/', async (req, res) => {
 
   try {
     const allGames = await Videogame.findAll({
-      include: 'Generos'
+      include: 'Genres'
     });
 
     res.json(allGames)
@@ -116,7 +116,7 @@ router.post('/', async (req, res) => {
     });
 
     // Le agrego los generos que envio el usuario.
-    await vidG.addGeneros(genres);
+    await vidG.addGenres(genres);
     // Respondo con el Videojuego creado.
 
     res.send(vidG);
@@ -132,7 +132,7 @@ router.get('/:id', async (req, res) => {
   if(id.split("-").length === 5) {
    let gameFound = await Videogame.findByPk(id,{
     include: [{
-      model: Genero,
+      model: Genre,
     }]
    });
 
@@ -170,11 +170,11 @@ router.put('/', async (req, res) => {
   const { code ,name, description, release_date, rating, plataforms, genres } = req.body;
 
   try {
-    const gameToUpdate = await Videogame.findByPk(code, {include: Genero});
-    const genresToRemove = gameToUpdate.Generos.map(type => type.dataValues.id);
+    const gameToUpdate = await Videogame.findByPk(code, {include: Genre});
+    const genresToRemove = gameToUpdate.Genres.map(type => type.dataValues.id);
     
-    await gameToUpdate.removeGeneros(genresToRemove);
-    await gameToUpdate.addGeneros(genres);
+    await gameToUpdate.removeGenres(genresToRemove);
+    await gameToUpdate.addGenres(genres);
     await gameToUpdate.set({
       name, 
       description, 

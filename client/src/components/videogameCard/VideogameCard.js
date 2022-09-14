@@ -7,7 +7,7 @@ import Style from './VideogameCard.module.css'
 
 
 function VideogameCard(props) {
-  const {id, name, background_image, Generos, rating } = props;
+  const {id, name, background_image, Genres, rating } = props;
 
   return(
     <Link className={Style.link} to={`/videogamedetail/${id}`}>
@@ -17,7 +17,7 @@ function VideogameCard(props) {
         <span>{rating}</span>
           <div className={Style.divisoryLine}></div>
         <div className={Style.genresContainer}>
-          {Generos?.map( g => <h3 key={g.id}>{g.name}</h3>)}
+          {Genres?.map( g => <h3 key={g.id}>{g.name}</h3>)}
         </div>
       
       </div>
