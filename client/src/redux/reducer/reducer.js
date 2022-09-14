@@ -156,7 +156,7 @@ const mainReducer = (state = initialState, action)=> {
           });
           if(!genreFalse) return false;
           if(state.objectPagination.createdByUser){
-            return typeof game.id === "string" 
+            return game.created_by_user
           }
         return true
       });
