@@ -102,7 +102,7 @@ router.get('/rating', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  let { name, description, release_date, rating, genres, platforms } = req.body;
+  const { name, description, release_date, rating, genres, platforms } = req.body;
 
   try {
     // Creo un videojuego con los datos que envia el usuario.
