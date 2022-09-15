@@ -12,7 +12,7 @@ function App() {
     <div className={Style.container}>
       <Routes>        
         <Route path='/' element={<LandingPage />} />
-        <Route path='/videogamedetail/:id' element={[<Navbar key={'Navbar'} />, <VideogameDetail  key={'VideogameDetail'} />]} />
+        <Route path='/videogamedetail/:code' element={[<Navbar key={'Navbar'} />, <VideogameDetail  key={'VideogameDetail'} />]} />
         <Route path='/home' element={[ <Navbar  key={'Navbar'} />, <Home  key={'Home'} />]} />
         <Route path='/createVideogame' element={[<Navbar  key={'Navbar'} />, <CreateVideogame  key={'CreateVideogame'} />]} />
         <Route path='*' element={<LandingPage />} />

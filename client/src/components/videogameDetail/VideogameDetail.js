@@ -7,16 +7,19 @@ import  background_img from '../../img/videogame.png';
 import Style from './VideogameDetail.module.css';
 
 function VideogameDetail(props){
-  let { id } = useParams();
+  let { code } = useParams();
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const details = useSelector(state => state.mainReducer.videogameDetails);
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
   const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
+  useEffect(() => {
+    console.log(details);
+  }, [details])
 
   function handleClick(e){
-    dispatch(deleteVideogame(id)); 
+    dispatch(deleteVideogame(code)); 
   }
 
   useEffect(() => {
@@ -31,11 +34,11 @@ function VideogameDetail(props){
   }, [deleteVideogameStatus, navigate, dispatch])
 
   useEffect(() => {
-    dispatch(getVideogameById(id))
+    dispatch(getVideogameById(code))
       return function destroyDetails() {
         dispatch({type: DESTROY_DETAILS, payload: {}})
       }
-  },[dispatch, id])
+  },[dispatch, code])
 
   return(
 
@@ -44,12 +47,12 @@ function VideogameDetail(props){
           //Por DB
           <div className={Style.apiMainContainer}>
             <div>
-              <img src={background_img} alt="background"/>
+              <img src={background_image} alt="background"/>
             </div>
             <div className={Style.gameDesc}>
               <button onClick={handleClick}>Delete</button>
               <h1>{name}</h1>
-              {/* <p>{description}</p> */}
+              <p>{description_raw}</p>
               <div className={Style.divisoryLineBigger}></div>
               <h2>Rating:  {rating}</h2>
               <div className={Style.genresAndPlatformContainer}></div>

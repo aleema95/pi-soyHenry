@@ -1,6 +1,7 @@
 const { default: axios } = require('axios')
 const { Router } = require('express');
 const { Videogame, Genre, Op } = require('../db.js');
+const { randomId } = require('../functions/functions')
 const { API_KEY } = process.env;
 
 // Middleware para hacer request a la API.
@@ -41,6 +42,7 @@ const apiReq = async (req, res, next) => {
         // Creo un videojuego con los datos que envia el usuario.
         allGamesArr.forEach( async g => {
           const vidG = await Videogame.create({
+            code: `API_${g.id}`,
             name: g.name,
             released: g.release_date,
             rating: g.rating,
@@ -105,13 +107,16 @@ router.get('/rating', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  let { name, description, release_date, rating, genres, platforms } = req.body;
+  let { name, description_raw, release_date, rating, genres, platforms } = req.body;
+
+  const newId = Math.floor(Math.random()*3000000000000000)
 
   try {
     // Creo un videojuego con los datos que envia el usuario.
     const vidG = await Videogame.create({
+      code: `USER_${newId}`,
       name,
-      description,
+      description_raw,
       release_date,
       rating,
       platforms
@@ -123,34 +128,40 @@ router.post('/', async (req, res) => {
 
     res.send(vidG);
   } catch (error) {
-    res.status(200).send(error);
+    res.status(400).send(error);
   }
 });
 
 router.get('/:id', async (req, res) => {
   let { id } = req.params;
 
-  // Si es por DB
-  if(id.split("-").length === 5) {
-   let gameFound = await Videogame.findByPk(id,{
-    include: [{
-      model: Genre,
-    }]
-   });
+  try {
+    // Si es por DB
+    if(id.slice(0, 4) === 'USER') {
+      console.log('entro');
+    let gameFound = await Videogame.findByPk(id,{
+      include: [{
+        model: Genre,
+      }]
+    });
 
-   if(!gameFound) return res.status(404).send('No existe el juego');
+    if(!gameFound) return res.status(404).send('No existe el juego');
 
-   return res.status(200).json(gameFound)
+    return res.status(200).json(gameFound)
+    }
+
+    // Si es por API
+    id = parseInt(id.slice(4))
+
+    let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
+
+    if(gameFound) return res.status(200).json(gameFound.data);
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).send('No existe el juego.')
   }
-
-  // Si es por API
-  id = parseInt(id)
-
-  let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
-
-  if(gameFound) return res.status(200).json(gameFound.data);
-
-  res.status(404).send('No existe el juego.');
+ 
 
 });
 
