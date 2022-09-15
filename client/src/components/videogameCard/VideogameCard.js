@@ -7,10 +7,10 @@ import Style from './VideogameCard.module.css'
 
 
 function VideogameCard(props) {
-  const {id, name, background_image, Genres, rating } = props;
+  const {code, name, background_image, Genres, rating } = props;
 
   return(
-    <Link className={Style.link} to={`/videogamedetail/${id}`}>
+    <Link className={Style.link} to={`/videogamedetail/${code}`}>
       <div className={Style.container}>
         <img src={background_image} alt="background"/>
         <span>{name}</span>

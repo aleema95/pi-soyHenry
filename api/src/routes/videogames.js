@@ -1,72 +1,76 @@
 const { default: axios } = require('axios')
 const { Router } = require('express');
 const { Videogame, Genre, Op } = require('../db.js');
+const { randomId } = require('../functions/functions')
 const { API_KEY } = process.env;
 
 // Middleware para hacer request a la API.
 const apiReq = async (req, res, next) => {
   // Pregunto si ya esta almacenada.
-  const gamesInDb = await Videogame.findAll()
-  if(gamesInDb.length) return next(); 
-  allGamesArr = [];
-
-  // Si no lo esta hago la primera request.
-      let nextReq = `https://api.rawg.io/api/games?key=${API_KEY}`;
-
-      //Luego hago un loop hasta que llegue a 100 resultados.
-      for (let i = 0; i < 100; i = i + 20) {
-      //Pido .next del resultado de la API.
-        let games = await axios.get(nextReq);
-
-        // Pusheo todo a "allGamesArr".
-        
-        allGamesArr = [...allGamesArr, ...games?.data?.results?.map(game => {
-          let plataformas = game.platforms.map(p => p.platform.name)
-          return {
-            id: game.id,
-            name: game.name,
-            bg_img: game.background_image,
-            genres: game.genres,
-            //description: game.name,
-            release_date: game.released,
-            rating: game.rating,
-            platforms: plataformas,
-          }
-        })];
-        // Cambiamos la URL a la siguiente.
-        nextReq = games.data.next;
-      
-    }
-      // Creo un videojuego con los datos que envia el usuario.
-      allGamesArr.forEach( async g => {
-        const vidG = await Videogame.create({
-          name: g.name,
-          released: g.release_date,
-          rating: g.rating,
-          background_image: g.bg_img,
-          platforms: g.platforms,
-          created_by_user: false
-        });
-        
-        const gensFound = g.genres.map( async g => {
-          return await Genre.findOne({
-            where: {
-              name: g.name
-            },
-            attributes: ['id']
+  try {
+    const gamesInDb = await Videogame.findAll()
+    if(gamesInDb.length) return next(); 
+    allGamesArr = [];
+  
+    // Si no lo esta hago la primera request.
+        let nextReq = `https://api.rawg.io/api/games?key=${API_KEY}`;
+  
+        //Luego hago un loop hasta que llegue a 100 resultados.
+        for (let i = 0; i < 100; i = i + 20) {
+        //Pido .next del resultado de la API.
+          let games = await axios.get(nextReq);
+  
+          // Pusheo todo a "allGamesArr".
+          
+          allGamesArr = [...allGamesArr, ...games?.data?.results?.map(game => {
+            let plataformas = game.platforms.map(p => p.platform.name)
+            return {
+              id: game.id,
+              name: game.name,
+              bg_img: game.background_image,
+              genres: game.genres,
+              //description: game.name,
+              release_date: game.released,
+              rating: game.rating,
+              platforms: plataformas,
+            }
+          })];
+          // Cambiamos la URL a la siguiente.
+          nextReq = games.data.next;
+        }
+        // Creo un videojuego con los datos que envia el usuario.
+        allGamesArr.forEach( async g => {
+          const vidG = await Videogame.create({
+            code: `API_${g.id}`,
+            name: g.name,
+            released: g.release_date,
+            rating: g.rating,
+            background_image: g.bg_img,
+            platforms: g.platforms,
+            created_by_user: false
+          });
+          
+          const gensFound = g.genres.map( async g => {
+            return await Genre.findOne({
+              where: {
+                name: g.name
+              },
+              attributes: ['id']
+            })
           })
-        })
-  
-        const gensFoundId = await Promise.all(gensFound)
-  
-        const gensId = gensFoundId.map( g => {
-          return g.id
-        }) 
-        
-        await vidG.addGenres(gensId);
-      });
-     
-    next();
+    
+          const gensFoundId = await Promise.all(gensFound)
+    
+          const gensId = gensFoundId.map( g => {
+            return g.id
+          }) 
+          
+          await vidG.addGenres(gensId);
+        });
+        next()
+  } catch (error) {
+    next(error)
+  }
 }
 
 const router = Router();
@@ -103,14 +107,17 @@ router.get('/rating', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { name, description, release_date, rating, genres, platforms } = req.body;
+  let { name, description_raw, release_date, rating, genres, platforms } = req.body;
+
+  const newId = Math.floor(Math.random()*3000000000000000)
 
   
   try {
     // Creo un videojuego con los datos que envia el usuario.
     const vidG = await Videogame.create({
+      code: `USER_${newId}`,
       name,
-      description,
+      description_raw,
       release_date,
       rating,
       platforms,
@@ -132,27 +139,33 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   let { id } = req.params;
 
-  // Si es por DB
-  if(id.split("-").length === 5) {
-   let gameFound = await Videogame.findByPk(id,{
-    include: [{
-      model: Genre,
-    }]
-   });
+  try {
+    // Si es por DB
+    if(id.slice(0, 4) === 'USER') {
+      console.log('entro');
+    let gameFound = await Videogame.findByPk(id,{
+      include: [{
+        model: Genre,
+      }]
+    });
 
-   if(!gameFound) return res.status(404).send('No existe el juego');
+    if(!gameFound) return res.status(404).send('No existe el juego');
 
-   return res.status(200).json(gameFound)
+    return res.status(200).json(gameFound)
+    }
+
+    // Si es por API
+    id = parseInt(id.slice(4))
+
+    let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
+
+    if(gameFound) return res.status(200).json(gameFound.data);
+
+  } catch (error) {
+    console.log(error);
+    res.status(400).send('No existe el juego.')
   }
-
-  // Si es por API
-  id = parseInt(id)
-
-  let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
-
-  if(gameFound) return res.status(200).json(gameFound.data);
-
-  res.status(404).send('No existe el juego.');
+ 
 
 });
 
