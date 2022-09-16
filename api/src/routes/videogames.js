@@ -142,12 +142,13 @@ router.get('/:id', async (req, res) => {
   try {
     // Si es por DB
     if(id.slice(0, 4) === 'USER') {
-      console.log('entro');
     let gameFound = await Videogame.findByPk(id,{
       include: [{
         model: Genre,
       }]
     });
+
+    console.log(gameFound.toJSON());
 
     if(!gameFound) return res.status(404).send('No existe el juego');
 
@@ -158,6 +159,16 @@ router.get('/:id', async (req, res) => {
     id = parseInt(id.slice(4))
 
     let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
+
+    console.log(gameFound.data);
+
+    gameFound.data.platforms = gameFound.data.platforms.map( p => {
+      return p.platform.name
+    })
+
+    gameFound.data.genres = gameFound.data.platforms.map( p => {
+      return p.platform.name
+    })
 
     if(gameFound) return res.status(200).json(gameFound.data);
 

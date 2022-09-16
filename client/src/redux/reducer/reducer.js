@@ -201,6 +201,7 @@ const mainReducer = (state = initialState, action)=> {
     }
 
     case GET_POKEMON_BY_ID:
+      console.log(action.payload);
       return {
         ...state,
         videogameDetails: action.payload
