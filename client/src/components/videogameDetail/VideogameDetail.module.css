@@ -1,12 +1,23 @@
 .apiMainContainer {
   position: relative;
   text-align: center;
+  justify-content: center;
   display: flex;
   color: var(--color-bright);
 }
 
 p {
   width: 80%;
+}
+
+.bgImgContainer {
+  margin: 50px 0;
+  width: 80vw;
+}
+
+.bgImg {
+  width: 100%;
+  object-fit: cover;
 }
 
 .gameDesc {
@@ -18,8 +29,8 @@ p {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  height: 80%;
+  width: 60%;
+  height: 70%;
   background: rgba(28, 27, 27, 0.6);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

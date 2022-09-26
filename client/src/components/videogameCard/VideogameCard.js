@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Style from './VideogameCard.module.css'
+import  background_img from '../../img/videogame.png';
 // import { useEffect } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getAllVideogames } from '../../redux/actions/actions';
@@ -12,7 +13,7 @@ function VideogameCard(props) {
   return(
     <Link className={Style.link} to={`/videogamedetail/${code}`}>
       <div className={Style.container}>
-        <img src={background_image} alt="background"/>
+        <img src={background_image ? background_image : background_img} alt="background"/>
         <span>{name}</span>
         <span>{rating}</span>
           <div className={Style.divisoryLine}></div>
