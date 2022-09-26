@@ -15,29 +15,6 @@ function VideogameDetail(props){
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
   const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
 
-  const showGenres = () => {
-    if(Genres) {
-      return (
-        <div>
-          { Genres?.map(genre =>{
-                    return(
-                      <h3 key={genre.id}>{genre.name}</h3>
-                    )
-                  })}
-        </div>
-      )
-    } else {
-      <div>
-          { genres?.map(genre =>{
-                    return(
-                      <h3 key={genre.id}>{genre.name}</h3>
-                    )
-                  })}
-        </div>
-    }
-  }
-
-
   // function handleClick(e){
   //   dispatch(deleteVideogame(code)); 
   // }

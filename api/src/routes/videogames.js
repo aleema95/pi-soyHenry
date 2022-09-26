@@ -127,11 +127,9 @@ router.post('/', async (req, res) => {
     // Le agrego los generos que envio el usuario.
     await vidG.addGenres(genres);
     // Respondo con el Videojuego creado.
-    console.log(genres);
-    console.log(vidG);
     res.send(vidG);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send(error);
   }
 });
@@ -163,11 +161,10 @@ router.get('/:id', async (req, res) => {
       return p.platform.name
     })
     
-    console.log(gameFound.data);
     if(gameFound) return res.status(200).json(gameFound.data);
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send('No existe el juego.')
   }
  
