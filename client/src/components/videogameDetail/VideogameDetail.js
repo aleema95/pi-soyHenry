@@ -12,6 +12,8 @@ function VideogameDetail(props){
 
   const dispatch = useDispatch();
   const details = useSelector(state => state.mainReducer.videogameDetails);
+  const fetchingGameDetails = useSelector(state => state.mainReducer.fetchingGameDetails);
+  const fetchingGameDetailsFailure = useSelector(state => state.mainReducer.fetchingGameDetailsFailure);
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
   const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
 
@@ -38,13 +40,13 @@ function VideogameDetail(props){
   },[dispatch, code])
 
   useEffect(() => {
-    console.log(details);
-  }, [details])
+    console.log(fetchingGameDetails);
+  }, [fetchingGameDetails])
 
   return(
 
       <div className={Style.mainContainer}>
-        {details ?  
+        {!fetchingGameDetails ?  
           <div className={Style.apiMainContainer}>
             <div className={Style.bgImgContainer}>
               <img className={Style.bgImg} src={background_image ? background_image : background_img} alt="background" />
