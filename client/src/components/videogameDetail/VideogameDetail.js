@@ -37,13 +37,17 @@ function VideogameDetail(props){
       }
   },[dispatch, code])
 
+  useEffect(() => {
+    console.log(details);
+  }, [details])
+
   return(
 
       <div className={Style.mainContainer}>
         {details ?  
           <div className={Style.apiMainContainer}>
             <div>
-              <img src={background_image} alt="background" />
+              <img src={background_image ? background_image : background_img} alt="background" />
             </div>
             <div className={Style.gameDesc}>
               <h1>{name}</h1>
