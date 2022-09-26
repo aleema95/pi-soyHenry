@@ -37,8 +37,7 @@ const apiReq = async (req, res, next) => {
           })];
           // Cambiamos la URL a la siguiente.
           nextReq = games.data.next;
-        
-      }
+        }
         // Creo un videojuego con los datos que envia el usuario.
         allGamesArr.forEach( async g => {
           const vidG = await Videogame.create({
@@ -47,7 +46,8 @@ const apiReq = async (req, res, next) => {
             released: g.release_date,
             rating: g.rating,
             background_image: g.bg_img,
-            platforms: g.platforms
+            platforms: g.platforms,
+            created_by_user: false
           });
           
           const gensFound = g.genres.map( async g => {
@@ -111,6 +111,7 @@ router.post('/', async (req, res) => {
 
   const newId = Math.floor(Math.random()*3000000000000000)
 
+  
   try {
     // Creo un videojuego con los datos que envia el usuario.
     const vidG = await Videogame.create({
@@ -119,15 +120,16 @@ router.post('/', async (req, res) => {
       description_raw,
       release_date,
       rating,
-      platforms
+      platforms,
+      created_by_user: true
     });
-
+    
     // Le agrego los generos que envio el usuario.
     await vidG.addGenres(genres);
     // Respondo con el Videojuego creado.
-
     res.send(vidG);
   } catch (error) {
+    console.error(error);
     res.status(400).send(error);
   }
 });
@@ -138,7 +140,6 @@ router.get('/:id', async (req, res) => {
   try {
     // Si es por DB
     if(id.slice(0, 4) === 'USER') {
-      console.log('entro');
     let gameFound = await Videogame.findByPk(id,{
       include: [{
         model: Genre,
@@ -155,10 +156,15 @@ router.get('/:id', async (req, res) => {
 
     let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
 
+    
+    gameFound.data.platforms = gameFound.data.platforms.map( p => {
+      return p.platform.name
+    })
+    
     if(gameFound) return res.status(200).json(gameFound.data);
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send('No existe el juego.')
   }
  

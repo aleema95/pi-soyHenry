@@ -14,13 +14,10 @@ function VideogameDetail(props){
   const details = useSelector(state => state.mainReducer.videogameDetails);
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
   const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
-  useEffect(() => {
-    console.log(details);
-  }, [details])
 
-  function handleClick(e){
-    dispatch(deleteVideogame(code)); 
-  }
+  // function handleClick(e){
+  //   dispatch(deleteVideogame(code)); 
+  // }
 
   useEffect(() => {
     if (deleteVideogameStatus === 'success') {
@@ -43,39 +40,7 @@ function VideogameDetail(props){
   return(
 
       <div className={Style.mainContainer}>
-          {Genres?
-          //Por DB
-          <div className={Style.apiMainContainer}>
-            <div>
-              <img src={background_image} alt="background"/>
-            </div>
-            <div className={Style.gameDesc}>
-              <button onClick={handleClick}>Delete</button>
-              <h1>{name}</h1>
-              <p>{description_raw}</p>
-              <div className={Style.divisoryLineBigger}></div>
-              <h2>Rating:  {rating}</h2>
-              <div className={Style.genresAndPlatformContainer}></div>
-              <div className={Style.genresContainer}>
-                <h2>Genres </h2>
-                <div className={Style.divisoryLine}></div>
-                  {Genres?.map( genre => {
-                    return (
-                      <h3 key={genre.id}>{genre.name}</h3>
-                    )})}
-              </div>
-              <div>
-                <h2>Platforms </h2>
-                <div className={Style.divisoryLine}></div>
-                {platforms?.map( platform => {
-                  return (
-                    <h3 key={platform.id}>{platform}</h3>
-                  )})}
-              </div>
-              {/* <h3>{release_date}</h3> */}
-            </div>
-          </div> :
-          //Por Api
+        {details ?  
           <div className={Style.apiMainContainer}>
             <div>
               <img src={background_image} alt="background" />
@@ -88,26 +53,35 @@ function VideogameDetail(props){
               <h3>Released: {released}</h3>
               <div className={Style.genresAndPlatformContainer}>
                 <div>
-                  {/* GENEROS POR API*/}
                   <h2>Genres </h2>
                   <div className={Style.divisoryLine}></div>
-                  {genres?.map(genre =>{
+                  { genres ? genres?.map(genre =>{
+                            return(
+                              <h3 key={genre.id}>{genre.name}</h3>
+                            )
+                          }) 
+                  : Genres?.map(genre =>{
                     return(
                       <h3 key={genre.id}>{genre.name}</h3>
                     )
-                  })}
+                  })
+                  }
                 </div>
+                { platforms ? 
                 <div>
                   <h2>Platforms </h2>
                   <div className={Style.divisoryLine}></div>
                   {platforms?.map( platform => {
                     return (
-                      <h3 key={platform.id}>{platform.platform.name}</h3>
+                      <h3 key={platform.id}>{platform}</h3>
                     )})}
-                </div>
+                </div> 
+                : <h2>Cargando</h2>
+                }
               </div>
             </div>
           </div> 
+        : <h1>Cargando...</h1>
         }
       </div>
   )
