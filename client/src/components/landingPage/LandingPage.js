@@ -28,7 +28,7 @@ function LandingPage(props) {
         </video>
         <div className={Style.blurBg}></div>
         <div className={Style.mainContainer}>
-          <h1>Bienvenido a la libreria de juegos.</h1>
+          <h1>Bienvenido a GameFlow.</h1>
           <div className={Style.buttonContainer}>
             {fetchingVideogames ?
               <h1 className={Style.loading}>Loading...</h1> :

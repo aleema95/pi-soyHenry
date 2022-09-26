@@ -8,6 +8,13 @@ input {
   color: var(--color-bright);
 }
 
+.filtersTitle {
+  margin-top: 20px;
+  margin-bottom: -40px;
+  justify-self: center;
+  align-self: center;
+}
+
 .videogamesContainer{
   display: flex;
   flex-wrap: wrap;

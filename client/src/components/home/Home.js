@@ -71,6 +71,7 @@ function Home(props){
     fetching ? <h1>Loading...</h1> :
     <div className={Style.mainContainer}>
       <div className={Style.filtersContainer}>
+          <h1 className={Style.filtersTitle}>Filtros</h1>
           <input className={Style.searchBarInput} ref={searchNameInput} placeholder="Search videogame by name..." type="text" name="name" onChange={handleChange} />
         <div className={Style.inputContainer}>
           <input onClick={handleClick} type="button" name="createdByUser" value={"Created by User"}/>
