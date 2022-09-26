@@ -26,7 +26,6 @@ module.exports = (sequelize) => {
     },
     background_image: {
       type: DataTypes.STRING,
-      defaultValue: "../../img/videogame.png"
     },
     platforms: {
       type: DataTypes.ARRAY(DataTypes.STRING), 
