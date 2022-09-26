@@ -46,8 +46,8 @@ function VideogameDetail(props){
       <div className={Style.mainContainer}>
         {details ?  
           <div className={Style.apiMainContainer}>
-            <div>
-              <img src={background_image ? background_image : background_img} alt="background" />
+            <div className={Style.bgImgContainer}>
+              <img className={Style.bgImg} src={background_image ? background_image : background_img} alt="background" />
             </div>
             <div className={Style.gameDesc}>
               <h1>{name}</h1>
