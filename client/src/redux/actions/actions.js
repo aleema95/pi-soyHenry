@@ -13,9 +13,12 @@ export const DESTROY_DETAILS = "DESTROY_DETAILS";
 export const VIDEOGAME_CREATE_SUCCESS = "VIDEOGAME_CREATE_SUCCESS";
 export const VIDEOGAME_CREATE_FAILED = "VIDEOGAME_CREATE_FAILED";
 export const RESET_CREATE_VIDEOGAME_STATUS = "RESET_CREATE_VIDEOGAME_STATUS";
+export const RESET_DELETE_VIDEOGAME_STATUS = "RESET_DELETE_VIDEOGAME_STATUS";
 export const VIDEOGAME_DELETE_SUCCESS = "VIDEOGAME_DELETE_SUCCESS";
 export const VIDEOGAME_DELETE_FAILED = "VIDEOGAME_DELETE_FAILED";
-export const RESET_DELETE_VIDEOGAME_STATUS = "RESET_DELETE_VIDEOGAME_STATUS";
+export const FETCHING_VIDEOGAME_DETAILS = "FETCHING_VIDEOGAME_DETAILS";
+export const FETCHING_VIDEOGAME_DETAILS_FAILURE = "FETCHING_VIDEOGAME_DETAILS_FAILURE";
+export const FETCHING_VIDEOGAME_DETAILS_SUCCESS = "FETCHING_VIDEOGAME_DETAILS_SUCCESS";
 
 
 
@@ -35,12 +38,15 @@ export function getAllVideogames() {
 
 export function getVideogameById(id){
   return dispatch => {
+    dispatch({type: FETCHING_VIDEOGAME_DETAILS})
     return axios.get(`http://localhost:3001/videogames/${id}`)
-      .then(json => {
-        dispatch({type: GET_POKEMON_BY_ID, payload: json.data})
-      }).catch(err => {
-        console.error(err);
-      })
+    .then(json => {
+      dispatch({type: GET_POKEMON_BY_ID, payload: json.data})
+      dispatch({type: FETCHING_VIDEOGAME_DETAILS_SUCCESS})
+    }).catch(err => {
+      console.error(err);
+      dispatch({type: FETCHING_VIDEOGAME_DETAILS_FAILURE})
+    })
   }
 }
 

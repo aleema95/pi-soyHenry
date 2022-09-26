@@ -14,7 +14,10 @@ import {
   RESET_CREATE_VIDEOGAME_STATUS,
   VIDEOGAME_DELETE_SUCCESS,
   VIDEOGAME_DELETE_FAILED,
-  RESET_DELETE_VIDEOGAME_STATUS
+  RESET_DELETE_VIDEOGAME_STATUS,
+  FETCHING_VIDEOGAME_DETAILS,
+  FETCHING_VIDEOGAME_DETAILS_FAILURE,
+  FETCHING_VIDEOGAME_DETAILS_SUCCESS,
 } from "../actions/actions";
 
 
@@ -28,7 +31,10 @@ const initialState = {
   fetching: false,
   errorHandler: false,
   createVideogameStatus: "",
-  deleteVideogameStatus: ""
+  deleteVideogameStatus: "",
+  fetchingGameDetails: false,
+  fetchingGameDetailsFailure: false,
+  fetchingGameDetailsSuccess: false,
 }
 
 
@@ -44,6 +50,26 @@ const mainReducer = (state = initialState, action)=> {
         filteredVideogames: action.payload.slice(state.objectPagination.from, state.objectPagination.to)
       };
     
+    case FETCHING_VIDEOGAME_DETAILS:
+      return {
+        ...state,
+        fetchingGameDetails: true
+      };
+
+    case FETCHING_VIDEOGAME_DETAILS_FAILURE:
+      return {
+        ...state,
+        fetchingGameDetails: false,
+        fetchingGameDetailsFailure: true,
+      };
+
+    case FETCHING_VIDEOGAME_DETAILS_SUCCESS:
+      return {
+        ...state,
+        fetchingGameDetails: false,
+        fetchingGameDetailsSuccess: true,
+      }
+
     case GET_ALL_GENRES:
       return{
         ...state,
@@ -156,7 +182,7 @@ const mainReducer = (state = initialState, action)=> {
           });
           if(!genreFalse) return false;
           if(state.objectPagination.createdByUser){
-            return typeof game.id === "string" 
+            return game.created_by_user
           }
         return true
       });
@@ -201,6 +227,7 @@ const mainReducer = (state = initialState, action)=> {
     }
 
     case GET_POKEMON_BY_ID:
+      console.log(action.payload);
       return {
         ...state,
         videogameDetails: action.payload
