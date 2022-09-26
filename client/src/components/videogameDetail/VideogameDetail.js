@@ -15,13 +15,32 @@ function VideogameDetail(props){
   const deleteVideogameStatus = useSelector(state => state.mainReducer.deleteVideogameStatus);
   const { name, background_image, Genres, genres,  platforms, rating,description_raw, released } = details;
 
-  useEffect(() => {
-    console.log(!details);
-  }, [details])
-
-  function handleClick(e){
-    dispatch(deleteVideogame(code)); 
+  const showGenres = () => {
+    if(Genres) {
+      return (
+        <div>
+          { Genres?.map(genre =>{
+                    return(
+                      <h3 key={genre.id}>{genre.name}</h3>
+                    )
+                  })}
+        </div>
+      )
+    } else {
+      <div>
+          { genres?.map(genre =>{
+                    return(
+                      <h3 key={genre.id}>{genre.name}</h3>
+                    )
+                  })}
+        </div>
+    }
   }
+
+
+  // function handleClick(e){
+  //   dispatch(deleteVideogame(code)); 
+  // }
 
   useEffect(() => {
     if (deleteVideogameStatus === 'success') {
@@ -56,19 +75,21 @@ function VideogameDetail(props){
               <h2>Rating:  {rating}</h2>
               <h3>Released: {released}</h3>
               <div className={Style.genresAndPlatformContainer}>
-                {/* {genres ? 
                 <div>
                   <h2>Genres </h2>
                   <div className={Style.divisoryLine}></div>
-                  { genres?.map(genre =>{
+                  { genres ? genres?.map(genre =>{
+                            return(
+                              <h3 key={genre.id}>{genre.name}</h3>
+                            )
+                          }) 
+                  : Genres?.map(genre =>{
                     return(
                       <h3 key={genre.id}>{genre.name}</h3>
                     )
-                  })}
-                </div>: 
-                <h2>Cargando</h2>
-                }
-                 */}
+                  })
+                  }
+                </div>
                 { platforms ? 
                 <div>
                   <h2>Platforms </h2>

@@ -148,8 +148,6 @@ router.get('/:id', async (req, res) => {
       }]
     });
 
-    console.log(gameFound.toJSON());
-
     if(!gameFound) return res.status(404).send('No existe el juego');
 
     return res.status(200).json(gameFound)
@@ -160,16 +158,12 @@ router.get('/:id', async (req, res) => {
 
     let gameFound = await axios.get(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`)
 
-    console.log(gameFound.data);
-
+    
     gameFound.data.platforms = gameFound.data.platforms.map( p => {
       return p.platform.name
     })
-
-    gameFound.data.genres = gameFound.data.platforms.map( p => {
-      return p.platform.name
-    })
-
+    
+    console.log(gameFound.data);
     if(gameFound) return res.status(200).json(gameFound.data);
 
   } catch (error) {
