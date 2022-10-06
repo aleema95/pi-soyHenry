@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGenres, getAllVideogames } from "../../redux/actions/actions";
 import { Link } from "react-router-dom";
-import sample from '../../video/bgVideo.mp4'
+// import sample from 'https://vimeo.com/757590545'
 import Style from './LandingPage.module.css'
 
 
@@ -23,9 +23,7 @@ function LandingPage(props) {
 
   return (
       <div>
-        <video className={Style.videoTag} autoPlay loop muted>
-          <source src={sample} type='video/mp4' />
-        </video>
+        <iframe className={Style.videoTag} src="https://giphy.com/embed/r2PXs4xorh7Cm6kHqr" allowFullScreen></iframe>
         <div className={Style.blurBg}></div>
         <div className={Style.mainContainer}>
           <h1>Bienvenido a GameFlow.</h1>

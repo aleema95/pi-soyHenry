@@ -33,6 +33,7 @@
   z-index: -2;
   object-fit: cover;
   width: 100%;
+  border: none;
   height: 100%;
 }
 
@@ -43,7 +44,7 @@
   z-index: -1;
   background: rgba(27, 8, 8, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(7.4px);
+  backdrop-filter: blur(5.4px);
 -webkit-backdrop-filter: blur(7.4px);
 }
 
