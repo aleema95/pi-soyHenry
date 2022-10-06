@@ -26,7 +26,7 @@ export const FETCHING_VIDEOGAME_DETAILS_SUCCESS = "FETCHING_VIDEOGAME_DETAILS_SU
 export function getAllVideogames() {
   return dispatch =>{
     dispatch({type: FETCHING})
-    return axios.get(`http://localhost:3001/videogames`)
+    return axios.get(`/videogames`)
       .then(json => {
         dispatch({type: GET_ALL_VIDEOGAMES, payload: json.data})
       }).catch(err => {
@@ -39,7 +39,7 @@ export function getAllVideogames() {
 export function getVideogameById(id){
   return dispatch => {
     dispatch({type: FETCHING_VIDEOGAME_DETAILS})
-    return axios.get(`http://localhost:3001/videogames/${id}`)
+    return axios.get(`/videogames/${id}`)
     .then(json => {
       dispatch({type: GET_POKEMON_BY_ID, payload: json.data})
       dispatch({type: FETCHING_VIDEOGAME_DETAILS_SUCCESS})
@@ -53,7 +53,7 @@ export function getVideogameById(id){
 export function getAllGenres(){
   return dispatch => {
     dispatch({type: FETCHING})
-    return axios.get(`http://localhost:3001/genres`)
+    return axios.get(`/genres`)
       .then(json => {
         dispatch({type: GET_ALL_GENRES, payload: json.data})
       }).catch( err => {
@@ -65,7 +65,7 @@ export function getAllGenres(){
 
 export function createVideogame(payload){
   return dispatch => {
-    return axios.post('http://localhost:3001/videogames', payload)
+    return axios.post('/videogames', payload)
               .then( r => dispatch({type: VIDEOGAME_CREATE_SUCCESS, payload: 'success'}))
               .catch(err => dispatch({type: VIDEOGAME_CREATE_FAILED, payload: 'error'}))
   }
@@ -73,7 +73,7 @@ export function createVideogame(payload){
 
 export function deleteVideogame(id) {
   return dispatch => {
-    return axios.delete(`http://localhost:3001/videogames/${id}`)
+    return axios.delete(`/videogames/${id}`)
               .then( r => dispatch({type: VIDEOGAME_DELETE_SUCCESS, payload: 'success'}))
               .catch( err =>dispatch({type: VIDEOGAME_DELETE_FAILED, payload: 'error'}))
   }

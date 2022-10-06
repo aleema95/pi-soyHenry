@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllGenres, getAllVideogames } from "../../redux/actions/actions";
 import { Link } from "react-router-dom";
-import sample from '../../video/bgVideo.mp4'
+import sample from '../../video/bgVideo-Comp.mp4'
 import Style from './LandingPage.module.css'
 
 
