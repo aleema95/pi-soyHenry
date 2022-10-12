@@ -38,10 +38,6 @@ function VideogameDetail(props){
       }
   },[dispatch, code])
 
-  useEffect(() => {
-    console.log(fetchingGameDetails);
-  }, [fetchingGameDetails])
-
   return(
 
       <div className={Style.mainContainer}>
