@@ -3,7 +3,7 @@ const { Sequelize, Op } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const {
-  DB_USER, DB_PASSWORD, DB_HOST, DB_NAME
+  DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_PORT
 } = process.env;
 
 //API URLkey = https://api.rawg.io/api/games?key=ad24d83c81c34279bcee55590c7f7124
@@ -13,7 +13,7 @@ let sequelize =
       database: DB_NAME,
       dialect: 'postgres',
       host: DB_HOST,
-      port: 5432,
+      port: DB_PORT || 5432,
       username: DB_USER,
       password: DB_PASSWORD,
       pool: {
